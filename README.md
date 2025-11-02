@@ -34,12 +34,13 @@ blackbird netbook or laptop config
 ### logical volume data
 
 #### data home
-
-### configs
+```
+```
+### data pods
 ```
 ```
 
 
-## at chroot
+## configs
 ```
 ```
