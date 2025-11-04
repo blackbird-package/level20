@@ -378,6 +378,9 @@ echo "tmpfs     					/tmp        		tmpfs   defaults,rw,nosuid,nodev,noexec,relat
 git clone https://github.com/blackbird-package/level20.git /mnt/opt/config
 ```
 ```
+cp -fr /mnt/opt/config/mnt/* /mnt
+```
+```
 cp -fr /mnt/opt/config/sysd/* /mnt
 ```
 ### network
