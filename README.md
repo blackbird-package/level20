@@ -567,7 +567,7 @@ echo "ip=(IP)::10.10.1.1:255.255.255.0::eth0:none nameserver=10.10.1.1 nameserve
 ```
 nvim /etc/cmdline.d/05-nets.conf
 ```
-#### hids
+### hids
 ```
 cd /tmp
 ```
@@ -589,7 +589,7 @@ cd aide-0.19.2
 ```
 make && make install
 ```
-#### network
+### network
 ```
 nvim /etc/systemd/network/20-ethernet.network
 ```
@@ -602,7 +602,9 @@ DNS=1.1.1.1 8.8.8.8
 MulticastDNS=yes
 ```
 
-#### booting
+### booting
+
+#### directory
 ```
 rm /boot/initramfs-linux-hardened*
 ```
@@ -618,8 +620,8 @@ mv /boot/amd-ucode.img /boot/vmlinuz-linux-hardened /boot/kernel
 bootctl --path=/boot install
 ```
 
-#### params
-**1. kernel**
+### params
+#### kernel
 - udev with nbde
 ```
 echo "cryptdevice=UUID=$(blkid -s UUID -o value /dev/[proc physical partition name]):proc root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
@@ -628,12 +630,12 @@ echo "cryptdevice=UUID=$(blkid -s UUID -o value /dev/[proc physical partition na
 ```
 echo "rd.luks.uuid=$(blkid -s UUID -o value /dev/[proc physical partition name])root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
 ```
-**2. cryptab**
+#### cryptab
 ```
 echo "data UUID=$(blkid -s UUID -o value /dev/[proc physical partition name]) none" >> /etc/crypttab
 ```
 
-#### service
+### service
 ```
 systemctl enable systemd-timesyncd.service &&
 systemctl enable tangd.socket &&
@@ -662,7 +664,7 @@ for udev system based only
 systemctl enable clevis-luks-askpass.path
 ```
 
-#### finishing
+### finishing
 ```
 mkinitcpio -P
 ```
@@ -675,5 +677,3 @@ umount -R /mnt
 ```
 reboot
 ```
-
-
