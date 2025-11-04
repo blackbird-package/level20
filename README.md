@@ -446,7 +446,13 @@ echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
 useradd -d /var/usr loki
 ```
 ```
+mkdir -p /var/usr/.ssh/
+```
+```
 chmod 700 /var/usr/.ssh/
+```
+```
+touch /var/usr/.ssh/authorized_keys
 ```
 ```
 chmod 600 /var/usr/.ssh/authorized_keys
@@ -690,6 +696,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
