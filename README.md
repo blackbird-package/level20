@@ -269,7 +269,7 @@ mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 ## 2. preparation
 
 ### Installation
-**Technical Procedure**
+
 **1. network**
 ```
 pacstrap /mnt openssh ethtool iptables-nft firewalld --noconfirm
@@ -321,12 +321,11 @@ pacstrap /mnt gnome-keyring libsecret libpam-google-authenticator libpwquality c
 ```
 pacstrap /mnt prometheus prometheus-node-exporter btop --noconfirm
 ```
-
-ethernet
+- ethernet
 ```
 cp /etc/system/network/* /mnt/etc/systemd/network/
 ```
-wireless
+- wireless
 ```
 pacstrap /mnt iwd --noconfirm 
 ```
@@ -682,4 +681,5 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
