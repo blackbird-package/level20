@@ -512,7 +512,7 @@ exit
 ```
 exit
 ```
-- root user
+#### root user
 ```
 passwd -l root
 ```
@@ -703,6 +703,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
