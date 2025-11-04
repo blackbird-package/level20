@@ -400,14 +400,14 @@ cp -fr /mnt/opt/config/syd /mnt
 arch-chroot /mnt
 ```
 
-## 2. postconfig
+## 3. postconfig
 
 ### based
-**1. hostname** 
+#### hostname 
 ```
 echo 'nama_hostname' > /etc/hostname
 ```
-**2. locatime** 
+#### locatime 
 ```
 ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 ```
@@ -427,12 +427,11 @@ timedatectl status
 systemctl enable systemd-timesyncd.service
 ```
 
-**2. locale** 
+##### locale 
 ```
 locale-gen
 ```
-**3. users** 
-
+##### users
 - system user
 ```
 echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
@@ -501,7 +500,7 @@ exit
 ```
 passwd -l root
 ```
-### flatpak
+#### flatpak
 ```
 mkdir -p /opt/flat
 ```
@@ -540,7 +539,7 @@ flatpak override --env=GTK_THEME=flow
 ```
 flatpak override --env=ICON_THEME=eggs
 ```
-### clevis ( udev based system with nbde only )
+#### clevis ( udev based system with nbde only )
 ```
 su nama_user
 ```
@@ -559,7 +558,7 @@ clevis luks bind -d /dev/[nama physical disk proc] tang '{"url":"http://10.10.1.
 ```
 clevis luks bind -d /dev/[nama physical disk data] tang '{"url":"http://10.10.1.16:7500"}'
 ```
-### hids
+#### hids
 ```
 cd /tmp
 ```
@@ -581,7 +580,7 @@ cd aide-0.19.2
 ```
 make && make install
 ```
-### network
+#### network
 ```
 nvim /etc/systemd/network/20-ethernet.network
 ```
@@ -594,7 +593,7 @@ DNS=1.1.1.1 8.8.8.8
 MulticastDNS=yes
 ```
 
-### booting
+#### booting
 ```
 rm /boot/initramfs-linux-hardened*
 ```
@@ -610,7 +609,7 @@ mv /boot/amd-ucode.img /boot/vmlinuz-linux-hardened /boot/kernel
 bootctl --path=/boot install
 ```
 
-### params
+#### params
 **1. kernel**
 - udev with nbde
 ```
@@ -632,7 +631,7 @@ echo "rd.luks.uuid=$(blkid -s UUID -o value /dev/[proc physical partition name])
 echo "data UUID=$(blkid -s UUID -o value /dev/[proc physical partition name]) none" >> /etc/crypttab
 ```
 
-### service
+#### service
 ```
 systemctl enable systemd-timesyncd.service &&
 systemctl enable tangd.socket &&
@@ -661,7 +660,7 @@ for udev system based only
 systemctl enable clevis-luks-askpass.path
 ```
 
-### finishing
+#### finishing
 ```
 mkinitcpio -P
 ```
@@ -674,6 +673,3 @@ umount -R /mnt
 ```
 reboot
 ```
-
-
-
