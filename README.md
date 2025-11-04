@@ -265,7 +265,6 @@ mkdir /mnt/home
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 ```
-
 ## 2. preparation
 
 ### Installation
@@ -273,6 +272,10 @@ mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 **1. network**
 ```
 pacstrap /mnt openssh ethtool iptables-nft firewalld --noconfirm
+```
+untuk perangkat support wireless tambahkan  
+```
+pacstrap /mnt iwd --noconfirm
 ```
 **2. kernel**
 ```
@@ -320,20 +323,6 @@ pacstrap /mnt gnome-keyring libsecret libpam-google-authenticator libpwquality c
 **11. monitoring**
 ```
 pacstrap /mnt prometheus prometheus-node-exporter btop --noconfirm
-```
-- ethernet
-```
-cp /etc/system/network/* /mnt/etc/systemd/network/
-```
-- wireless
-```
-pacstrap /mnt iwd --noconfirm 
-```
-```
-mkdir -p /mnt/var/lib/iwd/ 
-```
-```
-cp /var/lib/iwd/* /mnt/var/lib/iwd/
 ```
 
 **12. performance**
@@ -388,15 +377,30 @@ git clone https://github.com/blackbird-package /mnt/opt/config
 ```
 cp -fr /mnt/opt/config/mnt /mnt
 ```
-jika menggunakan udev 
+untuk system berbasis udev nbde 
 ```
 cp -fr /mnt/opt/config/udev /mnt
 ```
-**note**
-untuk pengguna keamanan berbasis Network Bond Disk Encryption maka gunakan udev
-jika menggunakan systemd
+ 
+untuk system berbasis systemd
 ```
 cp -fr /mnt/opt/config/syd /mnt
+```
+
+**3. network**
+ - ethernet
+```
+cp /etc/system/network/* /mnt/etc/systemd/network/
+```
+- wireless
+```
+pacstrap /mnt iwd --noconfirm 
+```
+```
+mkdir -p /mnt/var/lib/iwd/ 
+```
+```
+cp /var/lib/iwd/* /mnt/var/lib/iwd/
 ```
 
 **3.chroot**
@@ -681,5 +685,6 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
