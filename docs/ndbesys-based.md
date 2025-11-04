@@ -642,18 +642,17 @@ systemctl enable prometheus-node-exporter.service &&
 systemctl enable irqbalance &&
 systemctl enable tuned &&
 systemctl enable tuned-ppd.service &&
-systemctl enable nginx &&
 systemctl enable systemd-networkd &&
 systemctl enable systemd-resolved &&
 systemctl enable aide.timer &&
 systemctl enable sddm &&
 systemctl enable nginx &&
+systemctl enable clevis-luks-askpass.path &&
 systemctl enable --global gcr-ssh-agent.socket &&
 systemctl enable --global hypridle.service &&
 systemctl enable --global hyprpolkitagent &&
 systemctl enable --global waybar &&
-systemctl enable --global pipewire-pulse &&
-systemctl enable clevis-luks-askpass.path
+systemctl enable --global pipewire-pulse
 ```
 
 ## 8. finishing
