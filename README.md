@@ -268,24 +268,99 @@ mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 ```
 
 ## 2. package
+
+**Technical Procedure**
+**1. kernel**
+```
+pacstrap /mnt linux-hardened linux-firmware mkinitcpio base lvm2 btrfs-progs bubblewrap-suid --noconfirm &&
+```
+
+**2. devel**
+```
+pacstrap /mnt sudo debugedit fakeroot pkgconf bison gcc pcre flex wget make gcc curl less --noconfirm &&
+```
+
+**3. desktop**
+```
+pacstrap /mnt uwsm hyprland hyprpicker hyprshot hypridle hyprlock hyprpolkitagent xdg-desktop-portal-hyprland qt5-wayland qt6-wayland wl-clipboard cliphist mailcap brightnessctl --noconfirm &&
+```
+
+**4. panel**
+```
+pacstrap /mnt mako waybar wofi mpd mpc --noconfirm &&
+```
+
+**5. audio system**
+```
+pacstrap /mnt pipewire pipewire-pulse pipewire-jack wireplumber pavucontrol sof-firmware mpd mpc --noconfirm &&
+```
+
+**6. file system**
+```
+pacstrap /mnt nautilus nautilus-image-converter sushi --noconfirm &&
+```
+
+**7. font system**
+```
+pacstrap /mnt ttf-jetbrains-mono-nerd ttf-droid --noconfirm &&
+```
+
+**8. terminal**
+```
+pacstrap /mnt kitty kitty-terminfo neovim --noconfirm &&
+ ```
+
+**9. password**
+```
+pacstrap /mnt gnome-keyring libsecret libpam-google-authenticator libpwquality cracklib polkit apparmor qrencode --noconfirm &&
+```
+
+**10. monitoring**
+```
+pacstrap /mnt prometheus prometheus-node-exporter btop --noconfirm &&
+```
+
+**11. network**
+```
+pacstrap /mnt tang openssh ethtool iptables-nft firewalld --noconfirm
+```
+ethernet
+```
+cp /etc/system/network/* /mnt/etc/systemd/network/
+```
+wireless
+```
+pacstrap /mnt iwd --noconfirm 
+```
+```
+mkdir -p /mnt/var/lib/iwd/ 
+```
+```
+cp /var/lib/iwd/* /mnt/var/lib/iwd/
+```
+
+**12. performance**
+pacstrap /mnt irqbalance tuned tuned-ppd --noconfirm &&
+
+
+**13. backup**
+pacstrap /mnt rsync grsync --noconfirm &&
+
+
+**14. website **
+pacstrap /mnt go hugo nginx git --noconfirm &&
+
+
+**15. ucode **
 for intel
 ```
-pacstrap /mnt base base-devel neovim lvm2 openssh polkit git iptables-nft iwd  tang clevis mkinitcpio-nfs-utils luksmeta ethtool linux-hardened linux-firmware mkinitcpio intel-ucode libpwquality cracklib less bubblewrap-suid irqbalance reflector tuned tuned-ppd libpam-google-authenticator firewalld apparmor sof-firmware qrencode rsync grsync nginx prometheus prometheus-node-exporter wget
+pacstrap /mnt intel-ucode --noconfirm
 ```
 for amd
 ```
-pacstrap /mnt base base-devel neovim lvm2 openssh polkit git iptables-nft iwd  tang clevis mkinitcpio-nfs-utils luksmeta ethtool linux-hardened linux-firmware mkinitcpio amd-ucode libpwquality cracklib less bubblewrap-suid irqbalance reflector tuned tuned-ppd libpam-google-authenticator firewalld apparmor sof-firmware qrencode rsync grsync prometheus prometheus-node-exporter nginx wget
+pacstrap /mnt amd-ucode --noconfirm
 ```
-### network configuration
-```
-mkdir /mnt/var/lib/iwd
-```
-```
-cp /var/lib/iwd/*.psk /mnt/var/lib/iwd
-```
-```
-cp /etc/systemd/network/* /mnt/etc/systemd/network/
-```
+
 ### fstab
 ```
 genfstab -U /mnt > /mnt/etc/fstab
@@ -1721,6 +1796,7 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
 
 
