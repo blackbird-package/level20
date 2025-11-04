@@ -670,7 +670,7 @@ for udev system based only
 systemctl enable clevis-luks-askpass.path
 ```
 
-### finishing
+## 4. finishing
 ```
 mkinitcpio -P
 ```
@@ -683,6 +683,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
