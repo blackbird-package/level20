@@ -458,14 +458,15 @@ touch /var/usr/.ssh/authorized_keys
 chmod 600 /var/usr/.ssh/authorized_keys
 ```
 ```
-sudo chattr +i /var/usr/.ssh/authorized_keys
-```
-```
 chown -R loki:loki /var/usr
 ```
 ```
 passwd loki
 ```
+```
+sudo chattr +i /var/usr/.ssh/authorized_keys
+```
+
 #### daemon 
 ```
 useradd -d /var/games -u 50 -g games games
@@ -696,6 +697,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
