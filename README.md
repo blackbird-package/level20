@@ -267,8 +267,9 @@ mkdir /mnt/home
 mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 ```
 
-## 2. package
+## 2. preparation
 
+### Installation
 **Technical Procedure**
 **1. kernel**
 ```
@@ -1796,6 +1797,7 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
 
 
