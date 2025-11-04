@@ -341,18 +341,22 @@ cp /var/lib/iwd/* /mnt/var/lib/iwd/
 ```
 
 **12. performance**
+```
 pacstrap /mnt irqbalance tuned tuned-ppd --noconfirm &&
-
+```
 
 **13. backup**
+```
 pacstrap /mnt rsync grsync --noconfirm &&
-
+```
 
 **14. website **
+```
 pacstrap /mnt go hugo nginx git --noconfirm &&
+```
 
-
-**15. ucode **
+**15. ucode**
+pilih sesuai dengan jenis prosesor yang digunakan
 for intel
 ```
 pacstrap /mnt intel-ucode --noconfirm
@@ -1797,6 +1801,7 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
 
 
