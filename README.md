@@ -271,18 +271,17 @@ mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 
 ### Installation
 **Technical Procedure**
-**1. kernel**
+**1. network**
+```
+pacstrap /mnt tang openssh ethtool iptables-nft firewalld --noconfirm
+```
+**2. kernel**
 ```
 pacstrap /mnt linux-hardened linux-firmware mkinitcpio base lvm2 btrfs-progs bubblewrap-suid --noconfirm
 ```
-
-**2. devel**
+**3. devel**
 ```
 pacstrap /mnt sudo debugedit fakeroot pkgconf bison gcc pcre flex wget make gcc curl less --noconfirm
-```
-**3. network**
-```
-pacstrap /mnt tang openssh ethtool iptables-nft firewalld --noconfirm
 ```
 **4. audio system**
 ```
@@ -860,6 +859,7 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
 
 
