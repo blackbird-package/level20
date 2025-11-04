@@ -1,6 +1,6 @@
 ## blackbird protocol level 20
 
-## preparate
+## preparing
 
 
 ## chrooting
@@ -14,4 +14,5 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
