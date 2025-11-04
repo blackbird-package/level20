@@ -1,9 +1,9 @@
-## blackbird protocol level 20
+# blackbird protocol level 20
 
 
-# 1. Partitioning
+## 1. Partitioning
 
-## physical volume
+### physical volume
 
 ### disk layout
 | disk | partition | type              | luks  | lvm   | label    |  format | mount                      |
@@ -18,30 +18,9 @@
 - minimum size untuk perangkat dengan kartu grafis nvidia sebesar `1.5GB`
 
 
-### disk encryption
-```
-cryptsetup luksFormat --sector-size=4096 /dev/nvme0n1p2
-```
+### logical volume
 
-```
-cryptsetup luksFormat --sector-size=4096 /dev/nvme0n1p3
-```
-
-```
-cryptsetup luksFormat --sector-size=4096 /dev/nvme0n1p4
-```
-
-```
-cryptsetup luksOpen /dev/nvme0n1p3 proc
-```
-
-```
-cryptsetup luksOpen /dev/nvme0n1p4 data
-```
-
-## logical volume
-
-### volume proc
+#### volume proc
 
 **disk layout**
 | partition | list  | group | name |  mount                    | format |
@@ -57,7 +36,6 @@ cryptsetup luksOpen /dev/nvme0n1p4 data
 | 2         | 9     | proc  | vpac |  /mnt/var/cache/pacman    | ext4   |
 | 2         | 10    | proc  | ring |                           | ext4   |
 | 2         | 12    | proc  | docs |  /mnt/var/http            | ext4   |
-
 
 **minimum size **
 | name | size | mount                    | format |
@@ -76,20 +54,24 @@ cryptsetup luksOpen /dev/nvme0n1p4 data
 
 
 **technical procedure**
+
+**1. encrypt disk**
+```
+cryptsetup luksFormat --sector-size=4096 /dev/nvme0n1p3
+```
+```
+cryptsetup luksOpen /dev/nvme0n1p3 proc
+```
+
+**2. create lvm**
 ```
 pvcreate /dev/mapper/proc 
 ```
 ```
 vgcreate proc /dev/mapper/proc
 ```
-```
-pvcreate /dev/mapper/data
-```
-```
-vgcreate data /dev/mapper/data
-```
 
-**1. root**
+**3. root**
 ```
 lvcreate -L 10G proc -n root
 ```
@@ -99,18 +81,7 @@ mkfs.ext4 -b 4096 /dev/proc/root
 ```
 mount /dev/proc/root /mnt
 ```
-**2. boot**
-
-```
-mkfs.vfat -F32 -S 4096 -n BOOT [ partition path ]
-```
-```
-mkdir /mnt/boot
-```
-```
-mount -o uid=0,gid=0,fmask=0077,dmask=0077 [ path boot partition ] /mnt/boot
-```
-**3. opts**
+**4. opts**
 ```
 lvcreate -L 15G proc -n opts
 ```
@@ -123,7 +94,7 @@ mkdir /mnt/opt
 ```
 mount -o rw,nodev,nosuid,relatime /dev/proc/opts /mnt/opt
 ```
-**4. vars**
+**5. vars**
 ```
 lvcreate -L 2G proc -n vars
 ```
@@ -136,7 +107,7 @@ mkdir /mnt/var
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/vars /mnt/var
 ```
-**5. libs**
+**6. libs**
 ```
 lvcreate -L 512M proc -n libs
 ```
@@ -149,7 +120,7 @@ mkdir /mnt/var/usr
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/libs /mnt/var/usr
 ```
-**6. game**
+**7. game**
 ```
 lvcreate -L 512M proc -n game
 ```
@@ -162,7 +133,7 @@ mkdir /mnt/var/games
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/game /mnt/var/games
 ```
-**7. vlog**
+**8. vlog**
 ```
 lvcreate -L 1G proc -n vlog
 ```
@@ -175,7 +146,7 @@ mkdir /mnt/var/log
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/vlog /mnt/var/log
 ```
-**8. vaud**
+**9. vaud**
 ```
 lvcreate -L 256M proc -n vaud
 ```
@@ -188,7 +159,7 @@ mkdir /mnt/var/log/audit
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/vaud /mnt/var/log/audit
 ```
-**9. vtmp**
+**10. vtmp**
 ```
 lvcreate -L 2G proc -n vtmp
 ```
@@ -201,7 +172,7 @@ mkdir /mnt/var/tmp
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/vtmp /mnt/var/tmp
 ```
-**10. vpac**
+**11. vpac**
 ```
 lvcreate -L 2G proc -n vpac
 ```
@@ -214,7 +185,7 @@ mkdir -p /mnt/var/cache/pacman
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/vpac /mnt/var/cache/pacman
 ```
-**11. ring**
+**12. ring**
 ```
 lvcreate -L 512M proc -n ring
 ```
@@ -227,7 +198,7 @@ cryptsetup luksOpen /dev/proc/ring proc_keys
 ```
 mkfs.ext4 -b 4096 /dev/mapper/proc_keys
 ```
-**12. docs**
+**13. docs**
 ```
 lvcreate -l100%FREE proc -n docs
 ```
@@ -241,12 +212,48 @@ mkdir -p /mnt/srv /mnt/srv/http
 mount -o rw,nodev,noexec,nosuid,relatime /dev/proc/docs /mnt/srv/http
 ```
 
-### volume data
+### volume boot
+
+**technical procedure**
+
+```
+mkfs.vfat -F32 -S 4096 -n BOOT [ partition path ]
+```
+```
+mkdir /mnt/boot
+```
+```
+mount -o uid=0,gid=0,fmask=0077,dmask=0077 [ path boot partition ] /mnt/boot
+```
+
+#### volume data
+
+**disk layout**
+
 | partition | list  | group | name |  mount                    | format |
 | --------- | ----  | ----- | ---- |  -------------------------| ------ |
 | 2         | 1     | data  | home |  /mnt/home                | ext4   |
 
-### home
+
+**technical procedure**
+
+**1. encrypt disk**
+```
+cryptsetup luksFormat --sector-size=4096 /dev/nvme0n1p4
+```
+```
+cryptsetup luksOpen /dev/nvme0n1p4 data
+```
+
+**2. create lvm**
+```
+pvcreate /dev/mapper/data
+```
+```
+vgcreate data /dev/mapper/data
+```
+
+**3. home**
 ```
 lvcreate -L [ size in G | M ] data -n home
 ```
@@ -259,7 +266,8 @@ mkdir /mnt/home
 ```
 mount -o rw,nodev,noexec,nosuid,relatime /dev/data/home /mnt/home
 ```
-# 2. instalation package
+
+## 2. package
 for intel
 ```
 pacstrap /mnt base base-devel neovim lvm2 openssh polkit git iptables-nft iwd  tang clevis mkinitcpio-nfs-utils luksmeta ethtool linux-hardened linux-firmware mkinitcpio intel-ucode libpwquality cracklib less bubblewrap-suid irqbalance reflector tuned tuned-ppd libpam-google-authenticator firewalld apparmor sof-firmware qrencode rsync grsync nginx prometheus prometheus-node-exporter wget
@@ -1713,6 +1721,7 @@ git clone https://github.com/blackbird-package/level10.git /tmp/config
 ```
 cp -fr /tmp/config/* /
 ```
+
 
 
 
