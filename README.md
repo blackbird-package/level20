@@ -427,11 +427,11 @@ timedatectl status
 systemctl enable systemd-timesyncd.service
 ```
 
-##### locale 
+#### locale 
 ```
 locale-gen
 ```
-##### users
+#### users
 - system user
 ```
 echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
@@ -673,3 +673,4 @@ umount -R /mnt
 ```
 reboot
 ```
+
