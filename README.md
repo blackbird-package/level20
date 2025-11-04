@@ -608,7 +608,6 @@ MulticastDNS=yes
 
 ### booting
 
-#### directory
 ```
 rm /boot/initramfs-linux-hardened*
 ```
@@ -681,6 +680,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
