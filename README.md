@@ -2,7 +2,13 @@
 
 
 ## 1. preparation
-
+### additional package
+```
+pacman -Syy
+```
+```
+pacman -S git
+```
 ### physical volume
 
 **disk layout**
@@ -688,6 +694,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
