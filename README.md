@@ -376,7 +376,7 @@ echo "" >> /mnt/etc/fstab
 echo "# /dev/mapper/proc-temp" >> /mnt/etc/fstab
 ```
 ```
-echo "tmpfs     					/tmp        		tmpfs   defaults,rw,nosuid,nodev,noexec,relatime,size=256M" >> /mnt/etc/fstab
+echo "tmpfs     					/tmp        		tmpfs   defaults,rw,nosuid,nodev,noexec,relatime,size=512M" >> /mnt/etc/fstab
 ```
 **2. config**
 ```
@@ -396,7 +396,6 @@ jika menggunakan systemd
 cp -fr /mnt/opt/config/syd /mnt
 ```
 
-
 **3.chroot**
 ```
 arch-chroot /mnt
@@ -404,6 +403,7 @@ arch-chroot /mnt
 
 ## 2. postconfig
 
+### based
 **1. hostname** 
 ```
 echo 'nama_hostname' > /etc/hostname
@@ -425,9 +425,6 @@ timedatectl set-timezone Asia/Jakarta
 timedatectl status
 ```
 ```
-timedatectl show-timesync --all
-```
-```
 systemctl enable systemd-timesyncd.service
 ```
 
@@ -435,7 +432,7 @@ systemctl enable systemd-timesyncd.service
 ```
 locale-gen
 ```
-**2. users** 
+**3. users** 
 
 - system user
 ```
@@ -445,13 +442,7 @@ echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
 useradd -d /var/usr loki
 ```
 ```
-mkdir /var/usr/.ssh
-```
-```
 chmod 700 /var/usr/.ssh/
-```
-```
-touch /var/usr/.ssh/authorized_keys
 ```
 ```
 chmod 600 /var/usr/.ssh/authorized_keys
@@ -471,7 +462,7 @@ isikan password default
 useradd -d /var/games -u 50 -g games games
 ```
 ```
-cat /etc/passwd | grep games
+chown -R games:games /var/games
 ```
 ```
 passwd -l games
@@ -481,11 +472,12 @@ nvim /etc/passwd
 ```
 pastikan line `games` dibawah `nobody` dan shell menjadi`/usr/bin/nologin`, berikut contoh
 ```
+...
 nobody:x:65534:65534:Kernel Overflow User:/:/usr/bin/nologin
 games:x:50:50:Games User:/:/usr/bin/nologin
+...
 ```
 - admin user
-
 ```
 useradd -m nama_user
 ```
@@ -512,7 +504,8 @@ exit
 passwd -l root
 ```
 
-**4. flatpak**
+### flatpak
+
 ```
 mkdir -p /opt/flat
 ```
@@ -540,11 +533,19 @@ flatpak install --system -y --noninteractive flathub \
     fr.free.Homebank
 ```
 ```
-
+flatpak override --filesystem=$HOME/.themes
+```
+```
+flatpak override --filesystem=$HOME/.icons
+```
+```
+flatpak override --env=GTK_THEME=flow
+```
+```
+flatpak override --env=ICON_THEME=eggs
 ```
 
-**3. nbde** 
-- clevis client
+### clevis ( udev based system with nbde only )
 ```
 su nama_user
 ```
@@ -558,10 +559,12 @@ cd mkinitcpio-clevis-hook
 makepkg -si
 ```
 ```
-clevis luks bind -d /dev/nvme0n1p3 tang '{"url":"http://10.10.1.15:51379"}'
+clevis luks bind -d /dev/[nama physical disk proc] tang '{"url":"http://10.10.1.16:7500"}'
 ```
-
-**4. hids** 
+```
+clevis luks bind -d /dev/[nama physical disk data] tang '{"url":"http://10.10.1.16:7500"}'
+```
+### hids
 ```
 cd /tmp
 ```
@@ -583,8 +586,7 @@ cd aide-0.19.2
 ```
 make && make install
 ```
-
-**5. network** 
+### network
 ```
 nvim /etc/systemd/network/20-ethernet.network
 ```
@@ -595,9 +597,9 @@ Gateway=10.10.1.1
 DNS=1.1.1.1 8.8.8.8
 MulticastDNS=yes
 ```
+input ip yang diberikan untuk perangkat anda
 
-**5. booting ** 
-
+### booting
 ```
 rm /boot/initramfs-linux-hardened*
 ```
@@ -613,11 +615,11 @@ mv /boot/amd-ucode.img /boot/vmlinuz-linux-hardened /boot/kernel
 bootctl --path=/boot install
 ```
 
-**5. kernel param**
-
+### params
+**1. kernel**
 - udev with nbde
 ```
-echo "cryptdevice=UUID=$(blkid -s UUID -o value /dev/nvme0n1p3):proc root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
+echo "cryptdevice=UUID=$(blkid -s UUID -o value /dev/[proc physical partition name]):proc root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
 ```
 ```
 echo "ip=(ip address)::10.10.1.1:255.255.255.0::eth0:none nameserver=10.10.1.1 nameserver=1.1.1.1 nameserver=8.8.8.8 nameserver=1.0.0.1 nameserver=8.8.4.4 nameserver=9.9.9.9 nameserver=149.112.112.112 " > /etc/cmdline.d/05-nets.conf
@@ -627,16 +629,15 @@ nvim /etc/cmdline.d/05-nets.conf
 ```
 - systemd
 ```
-echo "rd.luks.uuid=$(blkid -s UUID -o value /dev/nvme0n1p3)root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
+echo "rd.luks.uuid=$(blkid -s UUID -o value /dev/[proc physical partition name])root=/dev/proc/root" > /etc/cmdline.d/01-boot.conf
 ```
 
-**6. cryptab**
-
+**2. cryptab**
 ```
-echo "data UUID=$(blkid -s UUID -o value /dev/nvme0n1p4) none" >> /etc/crypttab
+echo "data UUID=$(blkid -s UUID -o value /dev/[proc physical partition name]) none" >> /etc/crypttab
 ```
 
-**4. service**
+### service
 ```
 systemctl enable systemd-timesyncd.service &&
 systemctl enable tangd.socket &&
@@ -661,222 +662,22 @@ systemctl enable --global waybar &&
 systemctl enable --global pipewire-pulse &&
 ```
 
-for udev with nbde only
+udev system based only
 ```
 systemctl enable clevis-luks-askpass.path
 ```
 
-**6. finishing**
+### finishing
 
 ```
 mkinitcpio -P
 ```
-
-# 3. post instalation
 ```
-passwd -l root
+exit
 ```
-
-### blackbird hyprland
-#### installation
-
 ```
-sudo pacman -S uwsm hyprland hyprpolkitagent hypridle hyprlock xdg-desktop-portal-hyprland pipewire pipewire-pulse pipewire-jack wireplumber pavucontrol kitty qt5-wayland qt6-wayland ttf-jetbrains-mono-nerd ttf-droid btop nautilus nautilus-image-converter sushi mako waybar wofi wl-clipboard cliphist mailcap hyprshot gnome-keyring libsecret brightnessctl hyprpicker flatpak gnome-software hugo go --noconfirm
+umount -R /mnt
 ```
-#### service
-
 ```
-sudo systemctl --global enable hypridle.service
+reboot
 ```
-```
-sudo systemctl --global enable hyprpolkitagent
-```
-```
-sudo systemctl --global enable waybar
-```
-```
-sudo systemctl --global enable pipewire-pulse
-```
-
-### sddm
-
-#### guideline
-```
-sudo pacman -S sddm --noconfirm
-```
-```
-sudo git clone https://github.com/blackbird-package/claw.git /tmp/claw
-```
-```
-sudo cp -fr /tmp/claw/pkg.tar.xz /usr/share/sddm/themes
-```
-```
-cd /usr/share/sddm/themes
-```
-```
-sudo tar -xf pkg.tar.xz 
-```
-#### configuration
-```
-sudo mkdir /etc/sddm.conf.d/
-```
-```
-sudo mv /usr/share/sddm/themes/claw/sddm-default.conf /etc/sddm.conf.d/default.conf
-```
-```
-sudo nvim /etc/sddm.conf.d/default.conf
-```
-change at `[Theme]`
-```
-Current=claw
-```
-#### service
-```
-sudo systemctl enable sddm
-```
-### apps
-#### configuration
-
-```
-sudo usermod -aG wheel nama_user
-```
-```
-sudo mkdir /opt/flat
-```
-
-```
-sudo ln -sf /opt/flat /var/lib/flatpak
-```
-
-```
-sudo flatpak override --filesystem=$HOME/.themes
-```
-
-```
-sudo flatpak override --filesystem=$HOME/.icons
-```
-```
-sudo flatpak override --env=GTK_THEME=flow
-```
-```
-sudo flatpak override --env=ICON_THEME=eggs
-```
-
-
-### browser
-
-#### instalation
-```
-sudo flatpak install --system  flathub org.mozilla.firefox
-```
-```
-sudo flatpak install --system flathub com.google.Chrome
-```
-### development
-#### instalation
-```
-sudo flatpak install --system flathub com.visualstudio.code
-```
-
-### finance
-```
-sudo flatpak install flathub fr.free.Homebank
-```
-### media player
-
-#### installation
-
-```
-sudo pacman -S mpd mpc mpv yt-dlp --noconfirm
-```
-```
-sudo flatpak install --system flathub de.wagnermartin.Plattenalbum
-```
-#### configuration
-```
-nvim .config/hypr/hyprland.conf
-```
-uncommenting
-```
-exec-once = /usr/bin/mpd --no-daemon 
-```
-### office tools
-
-#### installation
-```
-sudo flatpak install --system flathub md.obsidian.Obsidian
-```
-
-```
-sudo flatpak install --system flathub org.gnome.Calendar
-```
-
-```
-sudo flatpak install --system flathub org.gnome.Evolution
-```
-
-```
-sudo flatpak install --system flathub org.gnome.Calculator
-```
-
-### acces management
-
-#### installation
-
-```
-sudo flatpak install --system flathub com.github.tchx84.Flatseal
-```
-
-### key tools
-
-#### installation
-
-```
-sudo flatpak install --system flathub org.keepassxc.KeePassXC
-```
-
-```
-cd .local/share/applications
-```
-
-```
-rm -fr org.keepassxc.KeePassXC
-```
-
-
-
-## preparing
-
-
-## chrooting
-
-### step 1
-```
-git clone https://github.com/blackbird-package/level10.git /tmp/config
-```
-
-### step 2
-```
-cp -fr /tmp/config/* /
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
