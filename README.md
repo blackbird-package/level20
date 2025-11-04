@@ -381,15 +381,15 @@ echo "tmpfs     					/tmp        		tmpfs   defaults,rw,nosuid,nodev,noexec,relat
 git clone https://github.com/blackbird-package/level20.git /mnt/opt/config
 ```
 ```
-cp -fr /mnt/opt/config/mnt /mnt
+cp -fr /mnt/opt/config/mnt/* /mnt
 ```
 - udev nbde 
 ```
-cp -fr /mnt/opt/config/udev /mnt
+cp -fr /mnt/opt/config/udev/* /mnt
 ```
 - systemd
 ```
-cp -fr /mnt/opt/config/sysd /mnt
+cp -fr /mnt/opt/config/sysd/* /mnt
 ```
 
 ### network
@@ -449,13 +449,7 @@ echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
 useradd -d /var/usr loki
 ```
 ```
-mkdir -p /var/usr/.ssh/
-```
-```
 chmod 700 /var/usr/.ssh/
-```
-```
-touch /var/usr/.ssh/authorized_keys
 ```
 ```
 chmod 600 /var/usr/.ssh/authorized_keys
@@ -706,6 +700,7 @@ umount -R /mnt
 ```
 reboot
 ```
+
 
 
 
