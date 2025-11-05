@@ -69,5 +69,4 @@ curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" \
         -d parse_mode=HTML \
         -d text="$MESSAGE" > /dev/null
 }
-
 blackbird_admin_login_notif;
