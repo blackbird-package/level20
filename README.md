@@ -447,9 +447,6 @@ locale-gen
 ### users
 #### system 
 ```
-echo 'loki ALL=(ALL:ALL) ALL' >> /etc/sudoers
-```
-```
 useradd -d /var/usr loki
 ```
 ```
@@ -686,6 +683,7 @@ flatpak override --env=GTK_THEME=flow
 ```
 flatpak override --env=ICON_THEME=eggs
 ```
+
 
 
 
