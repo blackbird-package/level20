@@ -1,3 +1,4 @@
+# RAVEN 
 # mkinitcpio preset file for the 'linux-hardened' package
 
 ALL_config="/etc/mkinitcpio.d/default.conf"
@@ -9,7 +10,7 @@ PRESETS=('default')
 
 #default_config="/etc/mkinitcpio.conf"
 #default_image="/boot/initramfs-linux-hardened.img"
-default_uki="/boot/efi/linux/silverraven-hardened.efi"
+default_uki="/boot/efi/linux/raven-hardened.efi"
 #default_options="--splash /usr/share/systemd/bootctl/splash-arch.bmp"
 
 #fallback_config="/etc/mkinitcpio.conf"
