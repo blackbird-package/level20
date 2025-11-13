@@ -83,6 +83,7 @@ mkdir -p /usr/share/themes &&
 mkdir -p /etc/skel/.themes &&
 tar -xf /tmp/flow/pkg.tar.xz -C /usr/share/themes/ &&
 tar -xf /tmp/flow/pkg.tar.xz -C /etc/skel/.themes/ &&
+echo "successfully" &&
 
 ## icon
 sleep 3 && clear &&
@@ -91,13 +92,13 @@ git clone https://github.com/blackbird-package/eggs.git /tmp/eggs &&
 mkdir -p /etc/skel/.icons &&
 tar -xf /tmp/eggs/pkg.tar.xz -C /usr/share/icons/ &&
 tar -xf /tmp/eggs/pkg.tar.xz -C /etc/skel/.icons/ &&
-
+echo "successfully" &&
 ## sddm
 sleep 3 && clear &&
 echo "level 6" &&
 git clone https://github.com/blackbird-package/claw.git /tmp/claw &&
 tar -xf /tmp/claw/pkg.tar.xz -C /usr/share/sddm/themes &&
-
+echo "successfully" &&
 ## application
 sleep 3 && clear &&
 echo "level 7"&&
