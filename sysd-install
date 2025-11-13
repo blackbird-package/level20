@@ -65,7 +65,7 @@ pacman -Sy linux-zen linux-firmware-intel mkinitcpio lvm2 btrfs-progs scx-scheds
     hyprland hyprpicker hyprshot hypridle hyprlock hyprpolkitagent xdg-desktop-portal-hyprland qt5-wayland qt6-wayland wl-clipboard cliphist mailcap \
     sddm mako waybar weston \
     nautilus \
-    kitty kitty-terminfo neovim \
+    kitty kitty-terminfo \
     gnome-keyring libsecret libpam-google-authenticator libpwquality cracklib polkit apparmor qrencode \
     btop \
     tuned tuned-ppd \
