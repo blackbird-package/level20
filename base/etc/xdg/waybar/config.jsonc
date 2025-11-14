@@ -285,7 +285,7 @@
         "format" : "⏻ ",
 		"tooltip": false,
 		"menu": "on-click",
-		"menu-file": "$HOME/.config/waybar/power-menu.xml", // Menu file in resources folder
+		"menu-file": "/etc/xdg/waybar/power-menu.xml", // Menu file in resources folder
 		"menu-actions": {
             		"logout": "uwsm stop",
 			"shutdown": "poweroff",
